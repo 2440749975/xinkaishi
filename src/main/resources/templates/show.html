@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thymeleaf入门</title>
+</head>
+<body>
+
+<a th:href="@{/toadd}">添加</a>
+<form method="post" th:action="@{/toshow}" id="fm">
+    姓名：
+    <input name="sname" th:value="${student.sname}"><br>
+    开始时间：
+    <input name="start" type="date" th:value="${#dates.format(student.start,'yyyy-MM-dd')}">
+    结束时间：
+    <input name="end" type="date" th:value="${#dates.format(student.end,'yyyy-MM-dd')}">
+    <input type="hidden" name="pageNum" id="pm"> <br>
+
+    <input type="submit" value="搜索">
+</form>
+    <table border="1">
+        <tr>
+            <td>ID</td>
+            <td>学号</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>出生日期</td>
+            <td>操作</td>
+        </tr>
+        <tr th:each="u : ${page.list}" >
+            <td th:text="${u.sid}"></td>
+            <td th:text="${u.xuehao}"></td>
+            <td th:text="${u.sname}"></td>
+            <td th:if="${u.sex ==0}">
+                男
+            </td>
+            <td th:if="${u.sex ==1}">
+                女
+            </td>
+            <td th:text="${#dates.format(u.sdata,'yyyy-MM-dd')}"></td>
+            <td>
+                <a th:href="@{/delete(sid=(${u.sid}))}">删除</a>
+                <a th:href="@{/toupdate(sid=(${u.sid}))}">修改</a>
+            </td>
+        </tr>
+    </table>
+<button th:onclick="'jump('+${page.firstPage}+')'">首页</button>
+<button th:onclick="'jump('+${page.prePage}+')'">上一页</button>
+<button th:onclick="'jump('+${page.nextPage}+')'">下一页</button>
+<button th:onclick="'jump('+${page.lastPage}+')'">尾页</button>
+</body>
+    <script>
+        function jump(pageNum){
+            document.getElementById("pm").value=pageNum;
+            document.getElementById("fm").submit();
+        }
+    </script>
+</html>
